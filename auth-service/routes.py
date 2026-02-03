@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -8,11 +9,13 @@ from shared.utils import hash_password, verify_password, create_access_token, de
 from .schemas import RegisterIn, LoginIn, TokenOut, VerifyIn, VerifyOut
 from .crud import get_user_by_email, create_user
 
+
+load_dotenv()
 router = APIRouter()
 
-JWT_SECRET = os.getenv("JWT_SECRET", "change-this")
-JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "60"))
+JWT_SECRET = os.environ["JWT_SECRET"]
+JWT_ALGORITHM = os.environ["JWT_ALGORITHM"]
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"])
 
 def get_db_dep(SessionLocal):
     return db_dependency(SessionLocal)
