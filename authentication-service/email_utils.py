@@ -4,16 +4,17 @@ from email.mime.text import MIMEText
 
 def send_otp_email(to_email: str, otp: str) -> None:
     """
-    SMTP sender. Railway Variables (REQUIRED):
-    SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, SMTP_FROM
+    SMTP sender. Use Railway Variables:
+    SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM
     """
+    host = os.getenv("SMTP_HOST", "")
+    port = int(os.getenv("SMTP_PORT", "587"))
+    user = os.getenv("SMTP_USER", "")
+    password = os.getenv("SMTP_PASS", "")
+    from_email = os.getenv("SMTP_FROM", user)
 
-    # Fail-fast: mag-eerror agad kung wala sa env
-    host = os.environ["SMTP_HOST"]
-    port = int(os.environ["SMTP_PORT"])
-    user = os.environ["SMTP_USER"]
-    password = os.environ["SMTP_PASSWORD"]
-    from_email = os.environ["SMTP_FROM"]
+    if not host or not user or not password or not from_email:
+        raise RuntimeError("SMTP is not configured. Set SMTP_HOST/SMTP_PORT/SMTP_USER/SMTP_PASS/SMTP_FROM.")
 
     subject = "Your Password Reset OTP"
     body = (
